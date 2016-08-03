@@ -1,4 +1,18 @@
 ---
+- name: Check that git is installed
+  stat: path={{ drush_git_path }}
+  register: drush_git_installed
+  
+- fail: msg="Git doesn't seem to be installed at {{ drush_git_path }}."
+  when: not drush_git_installed.stat.exists
+  
+- name: Check that composer is installed
+  stat: path={{ drush_composer_path }}
+  register: drush_composer_installed
+  
+- fail: msg="Composer doesn't seem to be installed at {{ drush_composer_path }}."
+  when: not drush_composer_installed.stat.exists
+
 - name: Clone Drush from GitHub.
   git:
     repo: https://github.com/drush-ops/drush.git
@@ -11,19 +25,23 @@
 - name: Check for composer.json
   stat: path={{ drush_install_path }}/composer.json
   register: drush_composer
+  
+- name: Check for vendor directory
+  stat: path={{ drush_install_path }}/vendor
+  register: drush_composer_vendor
 
 # See: https://github.com/geerlingguy/ansible-role-drush/issues/6
 - name: Ensure Drush can be installed on Debian Wheezy.
   shell: >
-    {{ composer_path }} update {{ drush_composer_cli_options }}
+    {{ drush_composer_path }} update {{ drush_composer_cli_options }}
     chdir={{ drush_install_path }}
   when: drush_clone.changed and ansible_distribution == "Debian" and ansible_distribution_release == "wheezy" and drush_composer.stat.exists
 
 - name: Install Drush dependencies with Composer.
   shell: >
-    {{ composer_path }} install {{ drush_composer_cli_options }}
+    {{ drush_composer_path }} install {{ drush_composer_cli_options }}
     chdir={{ drush_install_path }}
-  when: drush_clone.changed and drush_composer.stat.exists
+  when: drush_composer.stat.exists and (drush_clone.changed or not drush_composer_vendor.stat.exists)
 
 - name: Create drush symlink.
   file:
