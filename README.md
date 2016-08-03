@@ -20,6 +20,14 @@ The location of the entire drush installation (includes all the supporting files
 
 The path where drush will be installed and available to your system. Should be in your user's `$PATH` so you can run commands simply with `drush` instead of the full path.
 
+    drush_git_path: /usr/bin/git    
+
+The path where this playbook will look to make sure git is installed.
+
+    drush_git_path: /usr/local/bin/composer    
+
+The path where this playbook will look to make sure composer is installed.
+
     drush_version: "master"
 
 The version of Drush to install (examples: `"master"` for the bleeding edge, `"7.x"`, `"6.x"`, `"6.2.0"`). This should be a string as it refers to a git branch, tag, or commit hash.
@@ -34,10 +42,7 @@ Whether to keep Drush up-to-date with the latest revision of the branch specifie
 These options are the safest for avoiding GitHub API rate limits when installing Drush, and can be very helpful when working on dependencies/installation, but builds can be sped up substantially by changing the first option to --prefer-dist.
 
 ## Dependencies
-
-  - geerlingguy.git (Installs Git).
-  - geerlingguy.php (Installs PHP).
-  - geerlingguy.composer (Installs Composer).
+Git and Composer must be installed. A check is done to make sure that they are (see drush_composer_path and drush_git_path above). I recommend using geeringlingguy.git and geerlingguy.php to install git and php.
 
 ## Example Playbook
 
