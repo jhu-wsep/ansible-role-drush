@@ -2,9 +2,9 @@
 dependencies: []
 
 galaxy_info:
-  author: geerlingguy
+  author: tjarrett
   description: Drush - command line shell for Drupal
-  company: "Midwestern Mac, LLC"
+  company: "JHU WSEP"
   license: "license (BSD, MIT)"
   min_ansible_version: 1.4
   platforms:
